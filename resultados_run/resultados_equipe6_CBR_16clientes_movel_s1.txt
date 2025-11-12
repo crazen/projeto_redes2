@@ -1,0 +1,13 @@
+PROJETO REDES 2S2025 - UNIFESP/ICT - EQUIPE 6
+RESULTADOS DE SIMULAÇÃO
+Clientes: 16
+Tráfego: CBR
+Mobilidade: Sim
+Semente: 1
+Vazao_Mbps: 8.072
+Atraso_ms: 37.63
+Perda_%: 4.98
+PDR_%: 93.44
+Pacotes_TX: 117984
+Pacotes_RX: 110249
+Pacotes_Perdidos: 5872
