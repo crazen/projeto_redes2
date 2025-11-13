@@ -13,7 +13,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/wifi-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/csma-module.h" // Pode ser removido, P2P é usado
+#include "ns3/csma-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/propagation-loss-model.h"
 #include <fstream>
@@ -50,18 +50,18 @@ int main(int argc, char *argv[])
     cmd.AddValue("seed", "Semente para aleatoriedade", seed);
     cmd.Parse(argc, argv);
 
-    // Configurar semente para repetibilidade
+    // Configurar semente para melhorar resultados
     SeedManager::SetSeed(seed);
-    SeedManager::SetRun(seed); // CORRIGIDO
+    SeedManager::SetRun(seed);
 
     // ===========================
     //  CONFIGURAÇÕES DE TEMPO
     // ===========================
-    double totalTime = 60.0;  // 60s conforme tabela
-    double startTime = 1.0;   // Início das aplicações
+    double totalTime = 60.0;  
+    double startTime = 1.0;   
     double stopTime = totalTime; // Parada das aplicações
     
-    // Dimensões do cenário conforme documentação: 140x140m
+    // Dimensões do cenário
     double areaSize = 140.0;
 
     std::cout << "\n==========================================\n";
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     std::cout << "==========================================\n";
     std::cout << "Clientes: " << nClients << " | ";
     
-    // Nome do tráfego conforme documentação
+    // Nome do tráfego
     std::string trafegoNome;
     if (trafego == 0) trafegoNome = "CBR";
     else if (trafego == 1) trafegoNome = "Rajada";
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     // ===========================
     PointToPointHelper p2p;
     
-    // ✅ MUDANÇA 1: Gargalo removido. Voltando para 100Mbps.
+    // Enlace: 100Mbps.
     p2p.SetDeviceAttribute("DataRate", StringValue("100Mbps"));
     
     p2p.SetChannelAttribute("Delay", StringValue("2ms"));
@@ -118,14 +118,11 @@ int main(int argc, char *argv[])
     WifiHelper wifi;
     wifi.SetStandard(WIFI_STANDARD_80211a);
     
-    // AARF - CONFORME DOCUMENTAÇÃO (Seção 4.1)
     wifi.SetRemoteStationManager("ns3::AarfWifiManager");
 
     WifiMacHelper wifiMac;
     YansWifiChannelHelper wifiChannel;
     
-    // ✅ MUDANÇA 2: Usando LogDistance para replicar o COMPORTAMENTO
-    // de perda dos gráficos (Friis é muito otimista).
     wifiChannel.SetPropagationDelay("ns3::ConstantSpeedPropagationDelayModel");
     wifiChannel.AddPropagationLoss("ns3::LogDistancePropagationLossModel",
                                    "Exponent", DoubleValue(2.5),
@@ -165,9 +162,8 @@ int main(int argc, char *argv[])
     mobility.SetPositionAllocator(positionAlloc);
     mobility.Install(apNode);
 
-    // Clientes - CONFORME SEÇÃO 4.1 DO RELATÓRIO
     MobilityHelper staMobility;
-    
+    //Print para debug
     if (mobilityOn) {
         // CENÁRIO COM MOBILIDADE: ConstantVelocity 1-2 m/s (3.6-7.2 km/h)
         staMobility.SetMobilityModel("ns3::ConstantVelocityMobilityModel");
@@ -203,7 +199,7 @@ int main(int argc, char *argv[])
             Ptr<ConstantVelocityMobilityModel> mob = 
                 wifiStaNodes.Get(i)->GetObject<ConstantVelocityMobilityModel>();
             
-            // Sortear velocidade e direção para CADA cliente
+            // Sortear/randomize velocidade e direção para CADA cliente
             double speed = randSpeed->GetValue();
             double angle = randAngle->GetValue();
             
@@ -249,7 +245,7 @@ int main(int argc, char *argv[])
 
     std::cout << "\nConfiguração de Aplicações:\n";
 
-    // DISTRIBUIÇÃO CONFORME EQUAÇÃO 1 DO RELATÓRIO
+    // Distribuição de clientes
     for (uint32_t i = 0; i < nClients; ++i) {
         Ipv4Address clientAddress = staInterfaces.GetAddress(i);
         
@@ -262,7 +258,7 @@ int main(int argc, char *argv[])
             // Todos Rajada (TCP)
             isUdp = false;
         } else if (trafego == 2) {
-            // 50% CBR, 50% Rajada - CONFORME EQUAÇÃO 1
+            // 50% CBR, 50% Rajada
             isUdp = (i % 2 == 0); // id par = CBR, id ímpar = Rajada
         }
 
@@ -386,7 +382,7 @@ int main(int argc, char *argv[])
     }
     
     // Cálculo das médias
-    double avgThroughput = (totalRxBytes * 8.0) / (stopTime - startTime) / 1000000.0; // Vazão Agregada Correta
+    double avgThroughput = (totalRxBytes * 8.0) / (stopTime - startTime) / 1000000.0; // Vazão
     double avgDelay = (flowCountRxPackets > 0) ? (totalDelay / flowCountRxPackets) * 1000.0 : 0.0; // Atraso médio por pacote
     double avgLossPercent = (totalTxPackets > 0) ? 
         (100.0 * totalLostPackets / totalTxPackets) : 0.0;
@@ -434,7 +430,7 @@ int main(int argc, char *argv[])
     outFile << "Pacotes_Perdidos: " << totalLostPackets << "\n";
     outFile.close();
 
-    std::cout << "\n✅ Resultados salvos em: " << filename.str() << "\n\n";
+    std::cout << "\n Resultados salvos em: " << filename.str() << "\n\n";
 
     Simulator::Destroy();
     return 0;
