@@ -2,7 +2,7 @@
 
 # ===================================================================
 # SCRIPT DE EXECUÇÃO - PROJETO REDES EQUIPE 6
-# Itera por todos os cenários e por 33 sementes para cada um.
+# Itera por todos os cenários e por 5 sementes para cada um.
 # ===================================================================
 
 # --- Configurações ---
@@ -27,7 +27,7 @@ for clients in "${CLIENTES[@]}"; do
         # Loop por Mobilidade
         for mobility in "${MOBILIDADE_TIPOS[@]}"; do
             
-            # --- Define nomes amigáveis para o log ---
+            # --- Logs na tela ---
             T_NOME="Mixed" # Default
             [ $trafego -eq 0 ] && T_NOME="CBR"
             [ $trafego -eq 1 ] && T_NOME="Rajada"
