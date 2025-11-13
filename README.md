@@ -18,7 +18,7 @@ Análise dos Resultados
 
 Autores
 
-🌎 Cenários Implementados
+- Cenários Implementados
 Este projeto executa uma matriz de simulações para comparar os seguintes cenários:
 
 Protocolos (Tráfego):
@@ -41,7 +41,7 @@ Estático: Os clientes permanecem parados em um grid próximo ao AP.
 
 Móvel: Os clientes se movem aleatoriamente com velocidade de 1 a 2 m/s.
 
-🛠️ Tecnologias Utilizadas
+- Tecnologias Utilizadas
 Simulador: Network Simulator 3 (ns-3), versão 3.43
 
 Linguagem da Simulação: C++
@@ -65,7 +65,7 @@ Bibliotecas Python: pandas, matplotlib, seaborn
 ├── grafico_perda_pacotes.png   # Gráfico de saída
 ├── grafico_atraso_medio.png    # Gráfico de saída
 └── README.md                # Este arquivo
-🚀 Como Executar a Simulação
+- Como Executar a Simulação
 Siga estes passos para replicar os resultados do zero.
 
 1. Pré-requisitos
@@ -160,7 +160,7 @@ Rajada (TCP): Tráfego BulkSend (máxima vazão possível), com pacotes de 1500 
 
 Sementes (Seeds): O relatório pedia 33 sementes. Nossos testes foram feitos com 5 sementes por cenário (total de 180 execuções) devido a limitações de hardware. A seed garante que cada execução "Móvel" tenha um caminho aleatório diferente, permitindo o cálculo de uma média estatisticamente válida.
 
-📊 Análise dos Resultados
+- Análise dos Resultados
 Os gráficos gerados pelo script gerar_graficos.py contam uma história clara sobre o desempenho da rede.
 
 1. Gráfico de Vazão Agregada
